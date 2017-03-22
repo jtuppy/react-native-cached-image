@@ -161,11 +161,11 @@ const CachedImage = React.createClass({
     renderLoader() {
         const imageStyle = [this.props.style, styles.loaderPlaceholder];
         const source = this.props.loaderSource;
-
+        const imageKey = this.props.imageKey + 'loader';
         // otherwise render an image with the defaultSource
         return (
             <Image
-                key={this.props.imageKey}
+                key={imageKey}
                 source={source}
                 style={imageStyle}>
                 {this.props.children}
