@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 });
 
 function getImageProps(props) {
-    return _.omit(props, ['source', 'defaultSource', 'style', 'useQueryParamsInCacheKey', 'renderImage']);
+    return _.omit(props, ['source', 'defaultSource', 'style', 'useQueryParamsInCacheKey', 'renderImage', 'loaderSource', 'imageKey']);
 }
 
 const CACHED_IMAGE_REF = 'cachedImage';
@@ -41,7 +41,8 @@ const CACHED_IMAGE_REF = 'cachedImage';
 const CachedImage = React.createClass({
     propTypes: {
         renderImage: React.PropTypes.func.isRequired,
-        key: React.PropTypes.string.isRequired,
+        loaderSource: Image.propTypes.source,
+        imageKey: React.PropTypes.string.isRequired,
         useQueryParamsInCacheKey: React.PropTypes.oneOfType([
             React.PropTypes.bool,
             React.PropTypes.array
@@ -144,25 +145,27 @@ const CachedImage = React.createClass({
         }
         const props = getImageProps(this.props);
         const style = this.props.style || styles.image;
+        const key = this.props.imageKey;
         const source = (this.state.isCacheable && this.state.cachedImagePath) ? {
                 uri: 'file://' + this.state.cachedImagePath
             } : this.props.source;
-        console.log('Render Image ' + source);
+        console.log('Render Image ' + source.uri);
         return this.props.renderImage({
             ...props,
             style,
-            source
+            source,
+            key
         });
     },
 
     renderLoader() {
         const imageStyle = [this.props.style, styles.loaderPlaceholder];
-        const source = this.props.defaultSource;
-        console.log('Render loader ' + this.props.key + ' ' + source);
+        const source = this.props.loaderSource;
+        console.log('Render loader ' + this.props.imageKey + ' ' + source);
         // otherwise render an image with the defaultSource
         return (
             <Image
-                key={this.props.key}
+                key={this.props.imageKey}
                 source={source}
                 style={imageStyle}>
                 {this.props.children}
