@@ -149,7 +149,7 @@ const CachedImage = React.createClass({
         const source = (this.state.isCacheable && this.state.cachedImagePath) ? {
                 uri: 'file://' + this.state.cachedImagePath
             } : this.props.source;
-        console.log('Render Image ' + source.uri);
+
         return this.props.renderImage({
             ...props,
             style,
@@ -161,7 +161,7 @@ const CachedImage = React.createClass({
     renderLoader() {
         const imageStyle = [this.props.style, styles.loaderPlaceholder];
         const source = this.props.loaderSource;
-        console.log('Render loader ' + this.props.imageKey + ' ' + source);
+
         // otherwise render an image with the defaultSource
         return (
             <Image
