@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 });
 
 function getImageProps(props) {
-    return _.omit(props, ['source', 'defaultSource', 'activityIndicatorProps', 'style', 'useQueryParamsInCacheKey', 'renderImage']);
+    return _.omit(props, ['source', 'defaultSource', 'style', 'useQueryParamsInCacheKey', 'renderImage']);
 }
 
 const CACHED_IMAGE_REF = 'cachedImage';
@@ -41,7 +41,7 @@ const CACHED_IMAGE_REF = 'cachedImage';
 const CachedImage = React.createClass({
     propTypes: {
         renderImage: React.PropTypes.func.isRequired,
-        activityIndicatorProps: React.PropTypes.object.isRequired,
+        loaderSource: Image.propTypes.source.isRequired,
         useQueryParamsInCacheKey: React.PropTypes.oneOfType([
             React.PropTypes.bool,
             React.PropTypes.array
@@ -51,7 +51,6 @@ const CachedImage = React.createClass({
     getDefaultProps() {
         return {
             renderImage: props => (<Image ref={CACHED_IMAGE_REF} {...props}/>),
-            activityIndicatorProps: {},
             useQueryParamsInCacheKey: false
         };
     },
@@ -156,32 +155,16 @@ const CachedImage = React.createClass({
     },
 
     renderLoader() {
-        const imageProps = getImageProps(this.props);
         const imageStyle = [this.props.style, styles.loaderPlaceholder];
-
-        const activityIndicatorProps = _.omit(this.props.activityIndicatorProps, ['style']);
-        const activityIndicatorStyle = this.props.activityIndicatorProps.style || styles.loader;
-
         const source = this.props.defaultSource;
 
-        // if the imageStyle has borderRadius it will break the loading image view on android
-        // so we only show the ActivityIndicator
-        if (Platform.OS === 'android' && flattenStyle(imageStyle).borderRadius) {
-            return (
-                <ActivityIndicator
-                    {...activityIndicatorProps}
-                    style={[imageStyle, activityIndicatorStyle]}/>
-            );
-        }
-        // otherwise render an image with the defaultSource with the ActivityIndicator on top of it
+        // otherwise render an image with the defaultSource
         return (
             <Image
-                {...imageProps}
+                key={this.props.key}
                 source={source}
                 style={imageStyle}>
-                <ActivityIndicator
-                    {...activityIndicatorProps}
-                    style={activityIndicatorStyle}/>
+                {this.props.children}
             </Image>
         );
     }
