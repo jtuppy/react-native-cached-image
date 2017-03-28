@@ -27,8 +27,6 @@ const styles = StyleSheet.create({
     },
     loaderPlaceholder: {
         backgroundColor: 'transparent',
-        alignItems: 'center',
-        justifyContent: 'center'
     }
 });
 
